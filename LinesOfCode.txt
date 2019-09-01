@@ -1,0 +1,3 @@
+Linhas de código ANTES de utilizar o Lombok  - 7103
+
+Linhas de código DEPOIS de utilizar o Lombok - 6768
