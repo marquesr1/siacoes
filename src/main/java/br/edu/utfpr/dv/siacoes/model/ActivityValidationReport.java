@@ -1,9 +1,14 @@
 ﻿package br.edu.utfpr.dv.siacoes.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Getter
+@Setter
 public class ActivityValidationReport implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -21,37 +26,7 @@ public class ActivityValidationReport implements Serializable {
 		this.setSubmitted(0);
 		this.setValidated(0);
 	}
-	
-	public int getIdActivity() {
-		return idActivity;
-	}
-	public void setIdActivity(int idActivity) {
-		this.idActivity = idActivity;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public int getGroup() {
-		return group;
-	}
-	public void setGroup(int group) {
-		this.group = group;
-	}
-	public int getSubmitted() {
-		return submitted;
-	}
-	public void setSubmitted(int submitted) {
-		this.submitted = submitted;
-	}
-	public int getValidated() {
-		return validated;
-	}
-	public void setValidated(int validated) {
-		this.validated = validated;
-	}
+
 	public float getPercentageValidate() {
 		BigDecimal bd = new BigDecimal(((float)this.getValidated() / this.getSubmitted()) * 100);
 	    bd = bd.setScale(2, RoundingMode.HALF_UP);
