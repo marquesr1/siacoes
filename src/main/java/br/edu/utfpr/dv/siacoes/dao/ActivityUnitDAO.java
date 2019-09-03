@@ -11,7 +11,7 @@ import java.util.List;
 import br.edu.utfpr.dv.siacoes.log.UpdateEvent;
 import br.edu.utfpr.dv.siacoes.model.ActivityUnit;
 
-public class ActivityUnitDAO {
+public class ActivityUnitDAO implements IActivity {
 	
 	public List<ActivityUnit> listAll() throws SQLException{
 		Connection conn = null;

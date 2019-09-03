@@ -18,7 +18,7 @@ import br.edu.utfpr.dv.siacoes.model.FinalDocument.DocumentFeedback;
 import br.edu.utfpr.dv.siacoes.model.StudentActivityStatusReport;
 import br.edu.utfpr.dv.siacoes.model.User;
 
-public class ActivitySubmissionDAO {
+public class ActivitySubmissionDAO implements IActivity{
 	
 	public ActivityFeedback getFeedback(int idActivitySubmission) throws SQLException{
 		if(idActivitySubmission == 0){
