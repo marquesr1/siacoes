@@ -9,7 +9,7 @@ import br.edu.utfpr.dv.siacoes.log.UpdateEvent;
 import br.edu.utfpr.dv.siacoes.model.SigesConfig;
 import br.edu.utfpr.dv.siacoes.model.SigetConfig.SupervisorFilter;
 
-public class SigesConfigDAO {
+public class SigesConfigDAO extends ConfigDAO {
 
 	public SigesConfig findByDepartment(int idDepartment) throws SQLException{
 		Connection conn = null;

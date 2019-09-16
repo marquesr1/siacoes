@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import br.edu.utfpr.dv.siacoes.log.UpdateEvent;
 import br.edu.utfpr.dv.siacoes.model.SigacConfig;
 
-public class SigacConfigDAO {
-	
+public class SigacConfigDAO extends ConfigDAO {
+
 	public SigacConfig findByDepartment(int idDepartment) throws SQLException{
 		Connection conn = null;
 		PreparedStatement stmt = null;
