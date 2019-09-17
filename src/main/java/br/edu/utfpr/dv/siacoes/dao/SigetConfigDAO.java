@@ -1,96 +1,16 @@
 package br.edu.utfpr.dv.siacoes.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import br.edu.utfpr.dv.siacoes.log.UpdateEvent;
 import br.edu.utfpr.dv.siacoes.model.SigetConfig;
 import br.edu.utfpr.dv.siacoes.model.SigetConfig.AttendanceFrequency;
 import br.edu.utfpr.dv.siacoes.model.SigetConfig.SupervisorFilter;
 
 public class SigetConfigDAO extends ConfigDAO {
 
-	public SigetConfig findByDepartment(int idDepartment) throws SQLException{
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		
-		try{
-			conn = ConnectionDAO.getInstance().getConnection();
-			stmt = conn.prepareStatement("SELECT * FROM sigetconfig WHERE idDepartment = ?");
-		
-			stmt.setInt(1, idDepartment);
-			
-			rs = stmt.executeQuery();
-			
-			if(rs.next()){
-				return this.loadObject(rs);
-			}else{
-				return null;
-			}
-		}finally{
-			if((rs != null) && !rs.isClosed())
-				rs.close();
-			if((stmt != null) && !stmt.isClosed())
-				stmt.close();
-			if((conn != null) && !conn.isClosed())
-				conn.close();
-		}
-	}
-	
-	public int save(int idUser, SigetConfig config) throws SQLException{
-		boolean insert = (this.findByDepartment(config.getDepartment().getIdDepartment()) == null);
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		
-		try{
-			conn = ConnectionDAO.getInstance().getConnection();
-			
-			if(insert){
-				stmt = conn.prepareStatement("INSERT INTO sigetconfig(minimumScore, registerProposal, showgradestostudent, supervisorfilter, cosupervisorfilter, supervisorIndication, maxTutoredStage1, maxTutoredStage2, requestFinalDocumentStage1, repositoryLink, supervisorJuryRequest, supervisorAgreement, supervisorJuryAgreement, validateAttendances, attendanceFrequency, maxfilesize, minimumJuryMembers, minimumJurySubstitutes, jurytimestage1, jurytimestage2, supervisorAssignsGrades, idDepartment) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			}else{
-				stmt = conn.prepareStatement("UPDATE sigetconfig SET minimumScore=?, registerProposal=?, showgradestostudent=?, supervisorfilter=?, cosupervisorfilter=?, supervisorIndication=?, maxTutoredStage1=?, maxTutoredStage2=?, requestFinalDocumentStage1=?, repositoryLink=?, supervisorJuryRequest=?, supervisorAgreement=?, supervisorJuryAgreement=?, validateAttendances=?, attendanceFrequency=?, maxfilesize=?, minimumJuryMembers=?, minimumJurySubstitutes=?, jurytimestage1=?, jurytimestage2=?, supervisorAssignsGrades=? WHERE idDepartment=?");
-			}
-			
-			stmt.setDouble(1, config.getMinimumScore());
-			stmt.setInt(2, (config.isRegisterProposal() ? 1 : 0));
-			stmt.setInt(3, (config.isShowGradesToStudent() ? 1 : 0));
-			stmt.setInt(4, config.getSupervisorFilter().getValue());
-			stmt.setInt(5, config.getCosupervisorFilter().getValue());
-			stmt.setInt(6, config.getSupervisorIndication());
-			stmt.setInt(7, config.getMaxTutoredStage1());
-			stmt.setInt(8, config.getMaxTutoredStage2());
-			stmt.setInt(9, (config.isRequestFinalDocumentStage1() ? 1 : 0));
-			stmt.setString(10, config.getRepositoryLink());
-			stmt.setInt(11, (config.isSupervisorJuryRequest() ? 1 : 0));
-			stmt.setInt(12, (config.isSupervisorAgreement() ? 1 : 0));
-			stmt.setInt(13, (config.isSupervisorJuryAgreement() ? 1 : 0));
-			stmt.setInt(14, (config.isValidateAttendances() ? 1 : 0));
-			stmt.setInt(15, config.getAttendanceFrequency().getValue());
-			stmt.setInt(16, config.getMaxFileSize());
-			stmt.setInt(17, config.getMinimumJuryMembers());
-			stmt.setInt(18, config.getMinimumJurySubstitutes());
-			stmt.setInt(19, config.getJuryTimeStage1());
-			stmt.setInt(20, config.getJuryTimeStage2());
-			stmt.setInt(21, (config.isSupervisorAssignsGrades() ? 1 : 0));
-			stmt.setInt(22, config.getDepartment().getIdDepartment());
-			
-			stmt.execute();
-			
-			new UpdateEvent(conn).registerUpdate(idUser, config);
-			
-			return config.getDepartment().getIdDepartment();
-		}finally{
-			if((stmt != null) && !stmt.isClosed())
-				stmt.close();
-			if((conn != null) && !conn.isClosed())
-				conn.close();
-		}
-	}
-	
-	private SigetConfig loadObject(ResultSet rs) throws SQLException{
+	protected SigetConfig loadObject(ResultSet rs) throws SQLException{
 		SigetConfig config = new SigetConfig();
 		
 		config.getDepartment().setIdDepartment(rs.getInt("idDepartment"));
@@ -118,5 +38,40 @@ public class SigetConfigDAO extends ConfigDAO {
 		
 		return config;
 	}
+
+    protected String getFindByDepartmentSelectStatement(){
+        return "SELECT * FROM sigetconfig WHERE idDepartment = ?";
+    }
+    protected String getSaveInsertStatement(){
+        return "INSERT INTO sigetconfig(minimumScore, registerProposal, showgradestostudent, supervisorfilter, cosupervisorfilter, supervisorIndication, maxTutoredStage1, maxTutoredStage2, requestFinalDocumentStage1, repositoryLink, supervisorJuryRequest, supervisorAgreement, supervisorJuryAgreement, validateAttendances, attendanceFrequency, maxfilesize, minimumJuryMembers, minimumJurySubstitutes, jurytimestage1, jurytimestage2, supervisorAssignsGrades, idDepartment) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    }
+    protected String getSaveUpdateStatement(){
+        return "UPDATE sigetconfig SET minimumScore=?, registerProposal=?, showgradestostudent=?, supervisorfilter=?, cosupervisorfilter=?, supervisorIndication=?, maxTutoredStage1=?, maxTutoredStage2=?, requestFinalDocumentStage1=?, repositoryLink=?, supervisorJuryRequest=?, supervisorAgreement=?, supervisorJuryAgreement=?, validateAttendances=?, attendanceFrequency=?, maxfilesize=?, minimumJuryMembers=?, minimumJurySubstitutes=?, jurytimestage1=?, jurytimestage2=?, supervisorAssignsGrades=? WHERE idDepartment=?";
+    }
+
+    protected void setSaveStatementParams(PreparedStatement stmt, Object config) throws SQLException {
+        stmt.setDouble(1, config.getMinimumScore());
+        stmt.setInt(2, (config.isRegisterProposal() ? 1 : 0));
+        stmt.setInt(3, (config.isShowGradesToStudent() ? 1 : 0));
+        stmt.setInt(4, config.getSupervisorFilter().getValue());
+        stmt.setInt(5, config.getCosupervisorFilter().getValue());
+        stmt.setInt(6, config.getSupervisorIndication());
+        stmt.setInt(7, config.getMaxTutoredStage1());
+        stmt.setInt(8, config.getMaxTutoredStage2());
+        stmt.setInt(9, (config.isRequestFinalDocumentStage1() ? 1 : 0));
+        stmt.setString(10, config.getRepositoryLink());
+        stmt.setInt(11, (config.isSupervisorJuryRequest() ? 1 : 0));
+        stmt.setInt(12, (config.isSupervisorAgreement() ? 1 : 0));
+        stmt.setInt(13, (config.isSupervisorJuryAgreement() ? 1 : 0));
+        stmt.setInt(14, (config.isValidateAttendances() ? 1 : 0));
+        stmt.setInt(15, config.getAttendanceFrequency().getValue());
+        stmt.setInt(16, config.getMaxFileSize());
+        stmt.setInt(17, config.getMinimumJuryMembers());
+        stmt.setInt(18, config.getMinimumJurySubstitutes());
+        stmt.setInt(19, config.getJuryTimeStage1());
+        stmt.setInt(20, config.getJuryTimeStage2());
+        stmt.setInt(21, (config.isSupervisorAssignsGrades() ? 1 : 0));
+        stmt.setInt(22, config.getDepartment().getIdDepartment());
+    }
 	
 }
