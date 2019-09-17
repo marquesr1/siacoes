@@ -15,7 +15,7 @@ public abstract class ConfigDAO<T> {
 
         try{
             conn = ConnectionDAO.getInstance().getConnection();
-            stmt = conn.prepareStatement();
+            stmt = conn.prepareStatement(getFindByDepartmentSelectStatement());
 
             stmt.setInt(1, idDepartment);
 
@@ -45,11 +45,12 @@ public abstract class ConfigDAO<T> {
             conn = ConnectionDAO.getInstance().getConnection();
 
             if(insert){
-                stmt = conn.prepareStatement();
+                stmt = conn.prepareStatement(getSaveInsertStatement());
             }else{
-                stmt = conn.prepareStatement();
+                stmt = conn.prepareStatement(getSaveUpdateStatement());
             }
 
+            setSaveStatementParams(stmt);
             stmt.execute();
 
             new UpdateEvent(conn).registerUpdate(idUser, config);
@@ -66,4 +67,10 @@ public abstract class ConfigDAO<T> {
     protected final T loadObject(ResultSet rs) throws SQLException{
 
     }
+
+    protected abstract String getFindByDepartmentSelectStatement();
+    protected abstract String getSaveInsertStatement();
+    protected abstract String getSaveUpdateStatement();
+
+    protected abstract void setSaveStatementParams(PreparedStatement stmt);
 }
