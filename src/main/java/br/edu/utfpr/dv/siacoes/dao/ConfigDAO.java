@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public abstract class ConfigDAO<T> {
+
     public final T findByDepartment(int idDepartment) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -64,9 +65,7 @@ public abstract class ConfigDAO<T> {
         }
     }
 
-    protected final T loadObject(ResultSet rs) throws SQLException{
-
-    }
+    protected abstract T loadObject(ResultSet rs) throws SQLException;
 
     protected abstract String getFindByDepartmentSelectStatement();
     protected abstract String getSaveInsertStatement();
