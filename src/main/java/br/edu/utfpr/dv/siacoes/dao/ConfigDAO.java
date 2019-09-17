@@ -51,7 +51,7 @@ public abstract class ConfigDAO<T> {
                 stmt = conn.prepareStatement(getSaveUpdateStatement());
             }
 
-            setSaveStatementParams(stmt);
+            setSaveStatementParams(stmt, config);
             stmt.execute();
 
             new UpdateEvent(conn).registerUpdate(idUser, config);
@@ -71,5 +71,5 @@ public abstract class ConfigDAO<T> {
     protected abstract String getSaveInsertStatement();
     protected abstract String getSaveUpdateStatement();
 
-    protected abstract void setSaveStatementParams(PreparedStatement stmt);
+    protected abstract void setSaveStatementParams(PreparedStatement stmt, T config) throws SQLException;
 }
